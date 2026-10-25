@@ -9,943 +9,1333 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         font-family: "Inter", "Segoe UI", sans-serif;
       }
+      .navtab {
+        color: rgba(255, 255, 255, 0.6);
+        border-bottom: 2px solid transparent;
+        transition: color 0.2s, border-color 0.2s;
+      }
+      .navtab.on {
+        color: #fff;
+        border-bottom-color: #38bdf8;
+      }
+      .no-scrollbar {
+        scrollbar-width: none;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      @media (max-width: 767px) {
+        [data-nav] {
+          scroll-margin-top: 52px;
+        }
+      }
 
-      .hero-professional {
-        /* Photo by Tima Miroshnichenko from Pexels */
-        background-image: linear-gradient(
-            rgba(20, 30, 48, 0.85),
-            rgba(36, 59, 85, 0.85)
-          ),
-          url("https://plus.unsplash.com/premium_photo-1673953510197-0950d951c6d9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZG9jdG9yfGVufDB8fDB8fHww");
-        background-size: cover;
-        background-position: center;
+      /* ---------- Thermometer nav ---------- */
+      .thermo-tube {
+        height: 260px;
+        width: 14px;
+      }
+      @media (min-width: 768px) {
+        .thermo-tube {
+          height: 360px;
+          width: 16px;
+        }
+      }
+      .thermo-scale {
+        background-image: repeating-linear-gradient(
+          to top,
+          rgba(100, 116, 139, 0.55) 0 1px,
+          transparent 1px 12px
+        );
+      }
+      .thermo-fill {
+        transition: height 0.25s ease-out;
+      }
+      .tick-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 9999px;
+        background: #fff;
+        border: 2px solid #cbd5e1;
+        transition: transform 0.2s, background 0.2s, border-color 0.2s;
+      }
+      .tick.is-passed .tick-dot {
+        background: #2563eb;
+        border-color: #fff;
+      }
+      .tick.is-active .tick-dot {
+        transform: scale(1.45);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+      }
+      .tick-label {
+        opacity: 0;
+        transform: translate(6px, -50%);
+        pointer-events: none;
+        transition: opacity 0.2s, transform 0.2s;
+      }
+      @media (hover: hover) {
+        #thermo:hover .tick-label {
+          opacity: 1;
+          transform: translate(0, -50%);
+        }
+      }
+      #thermo.open .tick-label,
+      .tick:focus-visible .tick-label,
+      .tick.is-active.flash .tick-label {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+      .tick.is-active .tick-label {
+        color: #1d4ed8;
+        font-weight: 700;
+        border-color: #2563eb;
+      }
+
+      /* ---------- Hero doctor animation ---------- */
+      .doc-bob {
+        animation: bob 4.5s ease-in-out infinite;
+      }
+      .doc-blink {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: blink 5s infinite;
+      }
+      .doc-wave {
+        transform-box: fill-box;
+        transform-origin: 15% 95%;
+        animation: wave 2.6s ease-in-out infinite;
+      }
+      .doc-float {
+        animation: float 5s ease-in-out infinite;
+      }
+      .doc-float.d2 {
+        animation-delay: -1.6s;
+        animation-duration: 6s;
+      }
+      .doc-float.d3 {
+        animation-delay: -3.2s;
+        animation-duration: 5.5s;
+      }
+      .doc-ecg {
+        stroke-dasharray: 520;
+        animation: ecg 3.2s linear infinite;
+      }
+      @keyframes bob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      @keyframes blink {
+        0%, 92%, 100% { transform: scaleY(1); }
+        95% { transform: scaleY(0.1); }
+      }
+      @keyframes wave {
+        0%, 100% { transform: rotate(-6deg); }
+        50% { transform: rotate(10deg); }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+      @keyframes ecg {
+        from { stroke-dashoffset: 520; }
+        to { stroke-dashoffset: -520; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .doc-bob, .doc-blink, .doc-wave, .doc-float, .doc-ecg {
+          animation: none;
+        }
+      }
+      @media (min-width: 1280px) {
+        .tick.is-active .tick-label {
+          opacity: 1;
+          transform: translate(0, -50%);
+        }
       }
     </style>
     <link rel="icon" href="weKongsi.png" type="image/png" />
   </head>
 
-  <body class="bg-gray-5 text-gray-500">
-    <!-- HEADER DESIGN -->
-    <header class="hero-professional text-white text-center py-20 px-6">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-          Miliki Perlindungan Perubatan<br />
-          <span class="text-yellow-400">RM1 Juta</span> Setahun <br />
-          Dengan Hanya <span class="text-yellow-400">Bawah RM50</span> Sebulan
-        </h1>
-        <p class="text-lg md:text-xl text-gray-300 mt-4 max-w-2xl mx-auto">
-          Jimat ratusan ringgit setiap bulan dan ribuan ringgit setiap tahun
-          dengan pelan perubatan yang direka untuk anda.
-        </p>
+  <body class="bg-slate-50 text-slate-600 antialiased">
+    <!-- ============ 1. HERO ============ -->
+    <header
+      id="utama"
+      data-nav
+      class="relative overflow-hidden text-white md:min-h-[100svh] flex bg-gradient-to-br from-blue-950 via-blue-900 to-blue-600"
+    >
+      <!-- background: dots + glow -->
+      <div
+        class="absolute inset-0 opacity-[0.15]"
+        style="
+          background-image: radial-gradient(#fff 1px, transparent 1px);
+          background-size: 22px 22px;
+        "
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-blue-400/30 blur-3xl"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-[28rem] h-[28rem] rounded-full bg-sky-300/20 blur-3xl"
+        aria-hidden="true"
+      ></div>
+
+      <!-- animated doctor (background) -->
+      <svg
+        class="absolute bottom-0 -right-3 w-[56%] max-w-[300px] md:right-[6%] md:w-[46%] md:max-w-[560px] h-auto"
+        viewBox="0 0 400 480"
+        role="img"
+        aria-label="Ilustrasi doktor melambai"
+      >
+        <!-- halo -->
+        <circle cx="200" cy="250" r="175" fill="#fff" opacity="0.06" />
+        <circle cx="200" cy="250" r="130" fill="#fff" opacity="0.07" />
+        <!-- ECG line -->
+        <path
+          class="doc-ecg"
+          d="M0 250 H110 l14 -38 l18 82 l16 -70 l12 26 H400"
+          fill="none"
+          stroke="#93c5fd"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          opacity="0.7"
+        />
+
+        <!-- floating icons -->
+        <g class="doc-float">
+          <path
+            d="M62 98 h14 v-14 h12 v14 h14 v12 h-14 v14 h-12 v-14 h-14z"
+            fill="#bfdbfe"
+          />
+        </g>
+        <g class="doc-float d2">
+          <path
+            d="M340 92 c-8 -14 -30 -8 -26 9 c3 11 26 25 26 25 s23 -14 26 -25 c4 -17 -18 -23 -26 -9z"
+            fill="#fca5a5"
+          />
+        </g>
+        <g class="doc-float d3">
+          <path
+            d="M58 300 l24 -9 l24 9 v16 c0 16 -11 27 -24 32 c-13 -5 -24 -16 -24 -32z"
+            fill="#93c5fd"
+          />
+          <path
+            d="M71 318 l8 8 l14 -15"
+            fill="none"
+            stroke="#1e3a8a"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g class="doc-float d2">
+          <path
+            d="M352 420 h8 v-8 h8 v8 h8 v8 h-8 v8 h-8 v-8 h-8z"
+            fill="#bfdbfe"
+          />
+        </g>
+
+        <!-- doctor -->
+        <g class="doc-bob">
+          <!-- waving arm (behind body) -->
+          <g class="doc-wave">
+            <path
+              d="M282 372 C298 334 312 306 322 276 L350 286 C342 318 328 352 312 390 Z"
+              fill="#f8fafc"
+            />
+            <path d="M320 280 L350 290" stroke="#cbd5e1" stroke-width="3" />
+            <ellipse cx="338" cy="262" rx="17" ry="19" fill="#f5c9a3" />
+            <rect x="322" y="232" width="8" height="22" rx="4" fill="#f5c9a3" />
+            <rect x="331" y="226" width="8" height="24" rx="4" fill="#f5c9a3" />
+            <rect x="340" y="228" width="8" height="23" rx="4" fill="#f5c9a3" />
+            <rect x="349" y="234" width="7" height="20" rx="3.5" fill="#f5c9a3" />
+          </g>
+
+          <!-- coat -->
+          <path
+            d="M88 480 C94 382 128 332 200 322 C272 332 306 382 312 480 Z"
+            fill="#f8fafc"
+          />
+          <!-- scrubs -->
+          <path
+            d="M168 327 L200 384 L232 327 C222 323 211 322 200 322 C189 322 178 323 168 327 Z"
+            fill="#2563eb"
+          />
+          <!-- lapels -->
+          <path
+            d="M168 327 L194 402 L186 480"
+            fill="none"
+            stroke="#cbd5e1"
+            stroke-width="3"
+          />
+          <path
+            d="M232 327 L206 402 L214 480"
+            fill="none"
+            stroke="#cbd5e1"
+            stroke-width="3"
+          />
+          <!-- neck -->
+          <rect x="183" y="294" width="34" height="36" rx="12" fill="#e8b48c" />
+          <!-- head (moved down 12 for a shorter neck) -->
+          <g transform="translate(0 12)">
+          <circle cx="148" cy="238" r="11" fill="#f5c9a3" />
+          <circle cx="252" cy="238" r="11" fill="#f5c9a3" />
+          <ellipse cx="200" cy="232" rx="52" ry="58" fill="#f5c9a3" />
+          <!-- hair -->
+          <path
+            d="M147 226 C140 168 182 150 206 152 C244 155 262 184 253 228 C247 204 232 190 206 191 C180 192 160 202 147 226 Z"
+            fill="#1e293b"
+          />
+          <!-- brows -->
+          <path
+            d="M172 220 q10 -6 20 0 M208 220 q10 -6 20 0"
+            fill="none"
+            stroke="#1e293b"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <!-- eyes -->
+          <g class="doc-blink">
+            <ellipse cx="182" cy="238" rx="5.5" ry="6.5" fill="#1e293b" />
+            <ellipse cx="218" cy="238" rx="5.5" ry="6.5" fill="#1e293b" />
+          </g>
+          <!-- cheeks + smile -->
+          <circle cx="168" cy="258" r="8" fill="#f87171" opacity="0.25" />
+          <circle cx="232" cy="258" r="8" fill="#f87171" opacity="0.25" />
+          <path
+            d="M184 260 Q200 275 216 260"
+            fill="none"
+            stroke="#9a3412"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          </g>
+          <!-- stethoscope -->
+          <path
+            d="M176 328 C168 364 174 398 200 408 C226 398 232 364 224 328"
+            fill="none"
+            stroke="#334155"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+          <path d="M200 408 V424" stroke="#334155" stroke-width="5" />
+          <circle cx="200" cy="433" r="10" fill="#94a3b8" stroke="#334155" stroke-width="4" />
+          <!-- badge -->
+          <rect x="240" y="384" width="40" height="24" rx="5" fill="#dbeafe" />
+          <path d="M254 396 h12 M260 390 v12" stroke="#2563eb" stroke-width="3" stroke-linecap="round" />
+          <!-- clipboard -->
+          <rect x="102" y="396" width="66" height="86" rx="7" fill="#1d4ed8" />
+          <rect x="110" y="410" width="50" height="70" rx="3" fill="#fff" />
+          <rect x="122" y="390" width="26" height="12" rx="4" fill="#94a3b8" />
+          <path
+            d="M118 424 h34 M118 436 h28 M118 448 h34 M118 460 h22"
+            stroke="#93c5fd"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <ellipse cx="166" cy="440" rx="13" ry="11" fill="#f5c9a3" />
+        </g>
+      </svg>
+
+      <!-- text -->
+      <div
+        class="relative z-10 w-full max-w-6xl mx-auto pl-5 pr-[30%] pt-24 pb-16 md:px-20 md:py-24 flex items-center"
+      >
+        <div class="max-w-xl [text-shadow:0_2px_12px_rgba(15,23,42,0.45)]">
+          <h1 class="font-extrabold tracking-tight">
+            <span
+              class="block text-base md:text-2xl font-semibold text-blue-200"
+              >Perlindungan Perubatan:</span
+            >
+            <span
+              class="block mt-2 text-4xl sm:text-5xl md:text-7xl leading-none"
+              ><span class="whitespace-nowrap">RM1 Juta</span><wbr /><span
+                class="text-base sm:text-2xl md:text-4xl text-red-300"
+                >/Setahun</span
+              ></span
+            >
+            <span class="block mt-4 text-3xl md:text-5xl leading-none"
+              ><span class="whitespace-nowrap">Bawah <span class="text-yellow-300">RM50</span></span
+              ><span class="text-base sm:text-xl md:text-3xl text-red-300"
+                >/Bulan</span
+              ></span
+            >
+          </h1>
+          <p class="mt-6 text-base md:text-xl text-blue-100/90">Pelan perubatan direka untuk masyarakat.</p>
+        </div>
       </div>
     </header>
 
-    <!-- WATERMARK -->
+    <!-- ============ MOBILE TOP NAV ============ -->
+    <div
+      id="topnav"
+      class="md:hidden fixed top-0 inset-x-0 z-[60] bg-blue-950/75 backdrop-blur-lg border-b border-white/10"
+      style="padding-top: env(safe-area-inset-top, 0px)"
+    >
+      <div class="flex items-center gap-2 h-12 pl-3 pr-2">
+        <nav
+          id="topnav-pills"
+          aria-label="Navigasi halaman"
+          class="no-scrollbar flex-1 flex gap-1 overflow-x-auto"
+        ></nav>
+        <a
+          href="https://naquib99.github.io/naquib_portfolio"
+          target="_blank"
+          class="shrink-0 text-[11px] font-medium text-white/80 bg-white/10 rounded-md px-2 py-1"
+          title="Halaman dibangunkan oleh Naquib"
+          >🛠 Naquib.dev</a
+        >
+      </div>
+      <!-- horizontal thermometer -->
+      <div class="relative h-1 bg-white/15" aria-hidden="true">
+        <div
+          id="topnav-fill"
+          class="absolute inset-y-0 left-0 bg-gradient-to-r from-sky-400 to-blue-400 transition-[width] duration-200"
+          style="width: 0"
+        ></div>
+      </div>
+    </div>
+
+    <!-- WATERMARK (desktop) -->
     <a
       href="https://naquib99.github.io/naquib_portfolio"
       target="_blank"
-      class="fixed top-4 right-4 text-xs sm:text-sm bg-black/70 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-md hover:bg-black/90 opacity-65 hover:opacity-100 transition-opacity duration-300 z-50"
+      class="hidden md:block fixed top-4 right-4 text-xs sm:text-sm bg-black/70 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-md hover:bg-black/90 opacity-65 hover:opacity-100 transition-opacity duration-300 z-50"
       title="Halaman dibangunkan oleh Naquib"
     >
       🛠 Naquib.dev
     </a>
 
-    <main class="max-w-4xl mx-auto p-6 md:p-8">
-      <!-- MASALAH -->
-      <section class="my-12">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8"
+    <!-- ============ THERMOMETER NAV ============ -->
+    <nav
+      id="thermo"
+      aria-label="Navigasi halaman"
+      class="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-[60] flex-col items-center"
+    >
+      <div class="relative">
+        <!-- tube -->
+        <div
+          class="thermo-tube relative rounded-full bg-white/90 backdrop-blur border border-slate-300 shadow-md overflow-hidden"
         >
-          KAMI FAHAM ANDA MUNGKIN ADA MASALAH BEGINI
-        </h2>
-        <div class="mt-8 bg-white p-8 rounded-xl shadow-lg">
-          <ul class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Belum ada medical card</span>
+          <div
+            id="thermo-fill"
+            class="thermo-fill absolute bottom-0 inset-x-[3px] rounded-full bg-gradient-to-t from-blue-600 to-sky-400"
+            style="height: 12px"
+          ></div>
+        </div>
+        <!-- scale marks -->
+        <div
+          class="thermo-scale absolute top-3 bottom-3 -right-2 w-1.5"
+          aria-hidden="true"
+        ></div>
+        <!-- ticks -->
+        <ol id="thermo-ticks" class="absolute inset-x-0 top-3 bottom-3"></ol>
+      </div>
+      <!-- bulb -->
+      <div
+        class="-mt-1.5 w-7 h-7 md:w-8 md:h-8 rounded-full bg-blue-600 border-[3px] border-white shadow-lg relative"
+        aria-hidden="true"
+      >
+        <span
+          class="absolute top-1 left-1.5 w-2 h-2 rounded-full bg-white/50"
+        ></span>
+      </div>
+    </nav>
+
+    <main class="pb-40">
+      <!-- ============ 2. MASALAH ============ -->
+      <section
+        id="masalah"
+        data-nav
+        data-label="Masalah"
+        class="py-16 md:py-24 px-5 md:px-20 bg-slate-50"
+      >
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >02 · Masalah</span
+            >
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
+              Kami Faham Anda Mungkin Ada Masalah Begini
+            </h2>
+          </div>
+
+          <ul class="grid sm:grid-cols-2 gap-x-12 max-w-4xl mx-auto text-slate-700 md:text-lg">
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Belum ada medical card</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Tiada bajet yang mencukupi</span>
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Tiada bajet yang mencukupi</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Terbeban bayar medical card sedia ada</span>
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Terbeban bayar medical card sedia ada</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Dah ada medical card, tapi mahal</span>
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Dah ada medical card, tapi mahal</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Medical card yang ada dah/akan naik harga</span>
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Medical card yang ada dah/akan naik harga</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span>Nak cari medical card yang murah untuk anak-anak</span>
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span>Nak cari medical card yang murah untuk anak-anak</span>
             </li>
-            <li class="flex items-center">
-              <i class="fas fa-times-circle text-red-500 text-xl mr-2"></i
-              ><span
+            <li
+              class="flex items-start gap-3 py-4 border-b border-slate-200"
+            >
+              <i class="fas fa-times-circle text-red-500 text-lg mt-0.5"></i>
+              <span
                 >Masih survey medical card yang terbaik dengan harga
                 berpatutan</span
               >
             </li>
           </ul>
+
+          <div
+            class="mt-12 bg-blue-950 text-white rounded-3xl p-8 md:p-12 shadow-xl"
+          >
+            <div class="text-center">
+              <i
+                class="fas fa-exclamation-triangle text-3xl text-yellow-400 mb-4"
+              ></i>
+              <h3 class="text-xl md:text-3xl font-bold mb-3">
+                "Malang Tidak Berbau. Sudahkah Anda Bersedia?"
+              </h3>
+              <p class="text-slate-300 leading-relaxed max-w-2xl mx-auto text-justify [text-align-last:center]">Tiada siapa tahu bila musibah akan melanda. Jangan tunggu sakit dahulu baru mencari perlindungan.</p>
+            </div>
+            <div class="mt-8 bg-white/5 ring-1 ring-white/10 p-6 rounded-2xl">
+              <h4 class="font-bold text-lg text-center">
+                "Tapi hospital kerajaan kan ada?"
+              </h4>
+              <p class="text-center text-sm text-slate-400 mb-5">
+                Walaupun layak, pertimbangkan cabaran ini:
+              </p>
+              <ul class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Tempat letak kereta sesak</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Pesakit yang terlalu ramai</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Menunggu giliran yang lama</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Doktor pakar terhad</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Kos rawatan/alat tertentu mahal</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-minus-circle text-red-400"></i
+                  ><span>Sebahagian ubat perlu bayar sendiri</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- PENGENALAN DIRI -->
-      <section class="my-12 bg-white p-8 rounded-xl shadow-lg text-center">
-        <p class="text-lg mb-4">
-          Izinkan saya perkenalkan diri. Saya
-          <strong>Ahmad Naquib bin Ali</strong>. Dan saya bukan ejen
-          takaful atau insurans. Saya sama seperti anda yang mencari alternatif
-          perlindungan perubatan yang lebih baik dan mampu milik.
-        </p>
-        <p class="text-lg">
-          Dulu, medical card memerlukan komitmen bulanan RM100-RM200 atau lebih.
-          Kini, dengan alternatif yang saya temui, anda boleh mendapatkan
-          perlindungan RM1 juta setahun dengan bayaran bawah RM50 sebulan.
-        </p>
-      </section>
-
-      <!-- WE KONGSI -->
-      <section id="benefits" class="my-12">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8"
-        >
-          Memperkenalkan: WeKongsi
-        </h2>
-        <img src=assets/1.jpg alt="WeKongsi" class="w-full hero-bg rounded-lg
-        mx-auto mb-4 border-4 border-black-500" />
-        <div class="bg-gray-800 text-white p-8 rounded-xl shadow-2xl">
-          <section
-            class="my-12 max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md"
-          >
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Bayangkan...
-            </h2>
-            <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-              Dengan bayaran bawah RM50 sebulan, anda mendapat perlindungan RM1
-              juta setahun. Jika tiada rekod kemasukan hospital, tiada bayaran
-              perlu dibuat. Untuk kemasukan hospital, hanya tunjukkan aplikasi
-              di telefon anda. Sebaik sahaja GL diluluskan, semua bil ditanggung
-              beres, termasuk kos ujian saringan.
-            </p>
-            <p
-              class="mt-4 text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto"
+      <!-- ============ 3. PENYELESAIAN ============ -->
+      <section
+        id="penyelesaian"
+        data-nav
+        data-label="Penyelesaian"
+        class="py-16 md:py-24 px-5 md:px-20 bg-white"
+      >
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >03 · Penyelesaian</span
             >
-              Kini anda boleh bernafas lega kerana segala persoalan serta beban
-              kewangan untuk membayar medical card yang mahal akan segera
-              mendapat jalan penyelesaian.
-            </p>
-          </section>
-          <h3 class="text-2xl font-bold mb-6 text-red-500 text-center">
-            Kelebihan Utama Pelan Ini
-          </h3>
-          <ul class="grid md:grid-cols-2 gap-x-8 gap-y-4 w-fit mx-auto">
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i
-              >Perlindungan RM1 Juta Setahun
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Tiada Had
-              Seumur Hidup
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Cashless
-              (GL) di 250+ Hospital Panel
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Patuh
-              Syariah
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Tiada
-              Ko-takaful & Deduktibel
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Bilik &
-              Penginapan RM150/RM250
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Rawatan
-              Kanser RM100 Ribu Setahun
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-400 mr-3"></i>Khairat
-              Kematian RM10,000
-            </li>
-          </ul>
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
+              Memperkenalkan: WeKongsi
+            </h2>
+          </div>
+
+          <div
+            class="bg-slate-50 ring-1 ring-slate-200 rounded-2xl p-6 md:p-8 text-center text-lg leading-relaxed"
+          >
+            <p class="mb-4 text-justify [text-align-last:center]">Saya <strong class="text-slate-900">Ahmad Naquib bin Ali</strong>, bukan ejen takaful atau insurans. Sama seperti anda, saya mencari perlindungan perubatan yang lebih baik dan mampu milik.</p>
+            <p class="text-justify [text-align-last:center]">Dulu, medical card memerlukan RM100–RM200 sebulan atau lebih. Kini, anda boleh dapat perlindungan RM1 juta setahun dengan bayaran bawah RM50 sebulan.</p>
+          </div>
+
+          <img
+            src="assets/1.jpg"
+            alt="WeKongsi"
+            class="w-full rounded-2xl mt-10 shadow-lg ring-1 ring-slate-200"
+          />
+
+          <div class="mt-10 grid md:grid-cols-5 gap-6">
+            <div
+              class="md:col-span-2 bg-blue-50 ring-1 ring-blue-100 rounded-2xl p-6 md:p-8"
+            >
+              <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                Bayangkan...
+              </h3>
+              <p class="leading-relaxed text-justify">Bayar bawah RM50 sebulan untuk perlindungan RM1 juta setahun. Tiada rekod kemasukan hospital? Tiada bayaran. Bila perlu masuk hospital, tunjukkan sahaja aplikasi di telefon. Sebaik GL diluluskan, semua bil ditanggung, termasuk ujian saringan.</p>
+              <p class="mt-4 leading-relaxed text-justify">Kini anda boleh bernafas lega. Tiada lagi beban membayar medical card yang mahal.</p>
+            </div>
+            <div
+              class="md:col-span-3 bg-blue-950 text-white rounded-2xl p-6 md:p-8"
+            >
+              <h3 class="text-xl font-bold mb-5">Kelebihan Utama Pelan Ini</h3>
+              <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i
+                  >Perlindungan RM1 Juta Setahun
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Tiada
+                  Had Seumur Hidup
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i
+                  >Cashless (GL) di 250+ Hospital Panel
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Patuh
+                  Syariah
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Tiada
+                  Ko-takaful & Deduktibel
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Bilik &
+                  Penginapan RM150/RM250
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Rawatan
+                  Kanser RM100 Ribu Setahun
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fas fa-check-circle text-green-400 mt-1"></i>Khairat
+                  Kematian RM10,000
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- MACAM MANA MURAH -->
-      <section id="how-it-works" class="my-16">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-4"
-        >
-          Macam Mana Boleh Jadi Begitu Murah?
-        </h2>
-        <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
-          Bayaran bulanan dikira berdasarkan jumlah tuntutan bil hospital,
-          dibahagikan dengan jumlah ahli WeKongsi, dan dihadkan tidak lebih RM50
-          sebulan. Berikut adalah 3 contoh situasi:
-        </p>
-        <div class="grid md:grid-cols-3 gap-8 text-center">
-          <div
-            class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-green-500"
-          >
-            <h4 class="font-bold text-lg mb-2">Situasi 1: Tuntutan Rendah</h4>
-            <p class="text-sm text-gray-500">
-              Bil Perubatan: RM30,000 <br />Ahli: 3,000
-            </p>
-            <p class="text-sm text-gray-500">
-              Jumlah perkongsian setiap ahli ialah: RM30,000 ÷ 3000 =
-            </p>
-            <p class="text-3xl font-bold my-4 text-green-600">RM10</p>
-            <p class="text-gray-700">
-              Setiap ahli hanya akan ditolak RM10 daripada Sharing Account.
-            </p>
+      <!-- ============ 4. KENAPA ============ -->
+      <section
+        id="kenapa"
+        data-nav
+        data-label="Kenapa Kami"
+        class="py-16 md:py-24 px-5 md:px-20 bg-slate-50"
+      >
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >04 · Kenapa Kami</span
+            >
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
+              Disokong Oleh Rakan Kerjasama Yang Dipercayai
+            </h2>
           </div>
-          <div
-            class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-blue-500"
-          >
-            <h4 class="font-bold text-lg mb-2">Situasi 2: Tiada Tuntutan</h4>
-            <p class="text-sm text-gray-500">
-              Bil Perubatan: RM0 <br />Ahli: 3,000
-            </p>
-            <p class="text-sm text-gray-500">
-              Jumlah perkongsian setiap ahli ialah: RM0 ÷ 3000 =
-            </p>
-            <p class="text-3xl font-bold my-4 text-blue-600">RM0</p>
-            <p class="text-gray-700">
-              Tiada yang akan ditolak daripada Sharing Account.
-            </p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-red-500"
-          >
-            <h4 class="font-bold text-lg mb-2">Situasi 3: Tuntutan Tinggi</h4>
-            <p class="text-sm text-gray-500">
-              Bil Perubatan: RM240,000 <br />Ahli: 3,000
-            </p>
-            <p class="text-sm text-gray-500">
-              Jumlah perkongsian setiap ahli ialah: RM240,000 ÷ 3000 =
-            </p>
-            <p class="text-3xl font-bold my-4 text-red-600">RM80</p>
-            <p class="text-gray-700">
-              Bayaran dihadkan pada RM50 daripada Sharing Account. Baki bil
-              dibawa ke bulan hadapan.
-            </p>
-          </div>
-        </div>
 
-        <div class="grid md:grid-cols-2 gap-8 mt-4">
-          <a
-            href="https://www.wekongsi.com/reports"
-            target="_blank"
-            class="shadow-lg hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
-          >
-            <div class="bg-grey-300 p-6 rounded-lg border">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center"
+            >
               <img
-                src="assets/3.jpg"
-                alt="2023 Share Case"
-                class="h-70 w-full"
+                src="assets/logo/emas.png"
+                alt="Logo e-Mas"
+                class="h-12 mx-auto mb-4 object-contain"
+              />
+              <h4 class="font-bold text-slate-900">Third Party Administrator</h4>
+              <p class="text-sm mt-1 text-justify [text-align-last:center]">e-Mas menguruskan proses hospitalisasi dan tuntutan.</p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center"
+            >
+              <img
+                src="assets/logo/palladium.png"
+                alt="Logo Palladium"
+                class="h-12 mx-auto mb-4 object-contain"
+              />
+              <h4 class="font-bold text-slate-900">Badan Pemegang Amanah</h4>
+              <p class="text-sm mt-1 text-justify [text-align-last:center]">Palladium Trustee menguruskan dana ahli secara telus.</p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center"
+            >
+              <img
+                src="assets/logo/afsha.png"
+                alt="Logo Afsha"
+                class="h-12 mx-auto mb-4 object-contain"
+              />
+              <h4 class="font-bold text-slate-900">Panel Penasihat Shariah</h4>
+              <p class="text-sm mt-1 text-justify [text-align-last:center]">Afsha Shariah memastikan operasi patuh syariah.</p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center"
+            >
+              <img
+                src="assets/logo/curlec.png"
+                alt="Logo Curlec"
+                class="h-12 mx-auto mb-4 object-contain"
+              />
+              <h4 class="font-bold text-slate-900">Payment Gateway</h4>
+              <p class="text-sm mt-1 text-justify [text-align-last:center]">Curlec menyediakan saluran pembayaran yang selamat.</p>
+            </div>
+          </div>
+
+          <div class="mt-10 text-center">
+            <p class="text-slate-900 mb-4 max-w-3xl mx-auto text-justify [text-align-last:center]">Program WeKongsi disahkan patuh syariah oleh Afsha Shariah Advisory.</p>
+            <img
+              src="assets/6.png"
+              alt="Sijil patuh syariah Afsha"
+              class="w-full max-w-lg mx-auto rounded-xl shadow-lg ring-1 ring-slate-200"
+            />
+          </div>
+
+          <div class="mt-16 grid md:grid-cols-2 gap-8 items-start">
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+                Rangkaian Hospital & Klinik Panel Seluruh Negara
+              </h3>
+              <p class="mb-4 text-justify">Melalui eMAS, WeKongsi diterima di lebih 250 hospital panel kerajaan dan swasta seluruh Malaysia.</p>
+              <p class="mb-4 text-justify"><span class="font-bold text-blue-700 underline decoration-blue-500 decoration-2 underline-offset-4">Tips:</span> Hubungi hospital berhampiran dan tanya sama ada mereka menerima Surat Jaminan (GL) daripada eMAS.</p>
+              <p class="text-slate-800 font-semibold mb-4 text-justify"><strong>TERKINI:</strong> Kini boleh digunakan untuk pesakit luar di klinik panel! Bayar RM10 sahaja untuk rawatan dan ubat bagi 17 jenis penyakit.</p>
+              <img
+                src="assets/7.jpg"
+                alt="Jenis keadaan perubatan"
+                class="w-full rounded-xl shadow-lg ring-1 ring-slate-200"
               />
             </div>
-          </a>
-          <a
-            href="https://www.wekongsi.com/reports"
-            target="_blank"
-            class="shadow-lg hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
-          >
-            <div class="bg-grey-600 p-6 rounded-lg border">
-              <img
-                src="assets/4.jpg"
-                alt="2024 Share Case"
-                class="h-70 w-full"
-              />
-            </div>
-          </a>
-        </div>
-      </section>
-
-      <!-- RAKAN KONGSI -->
-      <section class="my-16">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8"
-        >
-          Disokong Oleh Rakan Kerjasama Yang Dipercayai
-        </h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img
-              src="assets/logo/emas.png"
-              alt="Logo e-Mas"
-              class="h-12 mx-auto mb-4 object-contain"
-            />
-            <h4 class="font-bold">Third Party Administrator</h4>
-            <p class="text-gray-600 text-sm">
-              e-Mas menguruskan proses hospitalisasi dan tuntutan.
-            </p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img
-              src="assets/logo/palladium.png"
-              alt="Logo Palladium"
-              class="h-12 mx-auto mb-4 object-contain"
-            />
-            <h4 class="font-bold">Badan Pemegang Amanah</h4>
-            <p class="text-gray-600 text-sm">
-              Palladium Trustee menguruskan dana ahli secara telus.
-            </p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img
-              src="assets/logo/afsha.png"
-              alt="Logo Afsha"
-              class="h-12 mx-auto mb-4 object-contain"
-            />
-            <h4 class="font-bold">Panel Penasihat Shariah</h4>
-            <p class="text-gray-600 text-sm">
-              Afsha Shariah memastikan operasi patuh syariah.
-            </p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <img
-              src="assets/logo/curlec.png"
-              alt="Logo Curlec"
-              class="h-12 mx-auto mb-4 object-contain"
-            />
-            <h4 class="font-bold">Payment Gateway</h4>
-            <p class="text-gray-600 text-sm">
-              Curlec menyediakan saluran pembayaran yang selamat.
-            </p>
-          </div>
-        </div>
-        <div class="mt-8">
-          <p class="text-center text-gray-900 mb-4 max-w-3xl mx-auto">
-            Program WeKongsi ini telah mendapat pengesahan patuh syariah
-            daripada Afsha Shariah Advisory.
-          </p>
-          <div class="h-115 w-full max-w-lg mx-auto">
-            <img src=assets/6.png alt="afsha" class="w-full hero-bg mx-auto mb-4
-            border-4 border-black-500" />
-          </div>
-        </div>
-      </section>
-
-      <!-- RANGKAIAN KLINIK -->
-      <section class="my-16">
-        <div class="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Rangkaian Hospital & Klinik Panel Seluruh Negara
-            </h2>
-            <p class="text-gray-700 mb-4">
-              Dengan kerjasama eMAS, WeKongsi diterima di lebih 250 hospital
-              panel seluruh Malaysia (kerajaan dan swasta).
-            </p>
-            <p
-              class="italic bg-blue-100 p-4 rounded-lg text-blue-800 border-l-4 border-blue-500 mb-4"
-            >
-              <strong>Tips:</strong> Cuba hubungi hospital berhampiran anda dan
-              sahkan jika mereka menerima Surat Jaminan (GL) daripada eMAS.
-            </p>
-            <p class="text-gray-700 font-semibold mb-4">
-              <strong>TERKINI:</strong> Kini boleh digunakan untuk rawatan
-              pesakit luar di klinik panel! Hanya bayar RM10 untuk rawatan dan
-              ubat bagi 17 jenis keadaan perubatan.
-            </p>
-            <div class="h-70 w-full mt-4">
-              <img src=assets/7.jpg alt="jenisPerubatan" class="w-full hero-bg
-              mx-auto mb-4 border-4 border-black-500" />
-            </div>
-          </div>
-          <div>
             <a
               href="https://wekongsi.com/hospital"
               target="_blank"
-              class="text-white font-bold rounded-lg shadow-lg hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
+              class="block transition-transform hover:scale-[1.02]"
             >
-              <div class="h-87 w-full">
-                <img src=assets/8.jpg alt="tempatKlinik" class="w-full hero-bg
-                mx-auto mb-4 border-4 border-black-500" />
-              </div></a
-            >
+              <img
+                src="assets/8.jpg"
+                alt="Senarai hospital dan klinik panel"
+                class="w-full rounded-xl shadow-lg ring-1 ring-slate-200"
+              />
+            </a>
           </div>
         </div>
       </section>
 
-      <!-- TEMPOH MENUNGGU -->
-      <section class="my-16">
-        <div class="grid md:grid-cols-2 gap-12">
-          <div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">
-              Tempoh Menunggu
-            </h3>
-            <ul class="space-y-3">
-              <li class="flex">
-                <div
-                  class="bg-red-500 text-white rounded-full h-8 w-8 text-center leading-8 font-bold mr-3"
-                >
-                  1
-                </div>
-                <div>
-                  <strong>Hari 1-90:</strong> Cover rawatan akibat kemalangan &
-                  kematian.
-                </div>
-              </li>
-              <li class="flex">
-                <div
-                  class="bg-red-500 text-white rounded-full h-8 w-8 text-center leading-8 font-bold mr-3"
-                >
-                  2
-                </div>
-                <div>
-                  <strong>Hari 91-180:</strong> Cover semua sakit biasa &
-                  kematian.
-                </div>
-              </li>
-              <li class="flex">
-                <div
-                  class="bg-red-500 text-white rounded-full h-8 w-8 text-center leading-8 font-bold mr-3"
-                >
-                  3
-                </div>
-                <div>
-                  <strong>Selepas 180 Hari:</strong> Perlindungan penuh termasuk
-                  sakit kritikal.
-                </div>
-              </li>
-            </ul>
+      <!-- ============ 5. HARGA (JUSTIFIKASI) ============ -->
+      <section
+        id="harga"
+        data-nav
+        data-label="Harga"
+        class="py-16 md:py-24 px-5 md:px-20 bg-white"
+      >
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >05 · Harga</span
+            >
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
+              Macam Mana Boleh Jadi Begitu Murah?
+            </h2>
+            <p class="mt-3 max-w-3xl mx-auto text-justify [text-align-last:center]">Bayaran bulanan ialah jumlah bil hospital dibahagi dengan jumlah ahli, dengan had maksimum RM50 sebulan. Contohnya:</p>
           </div>
-          <div class="h-63 w-full mt-4">
-            <img src=assets/9.jpg alt="tempohMenunggu" class="w-full hero-bg
-            mx-auto mb-4 border-4 border-black-500" />
-          </div>
-        </div>
 
-        <div>
-          <h3 class="text-xl font-bold text-gray-900 mb-4">Syarat Kelayakan</h3>
-          <ul class="space-y-3 text-lg">
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-3"></i>Warganegara
-              Malaysia
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-3"></i>Sihat
-              fizikal dan mental
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-3"></i>Jujur
-              tentang status kesihatan
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-3"></i>Umur 15
-              hari hingga 45 tahun
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- YURAN KEAHLIAN -->
-      <section class="my-16">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8"
-        >
-          Pilihan Yuran Keahlian & Deposit
-        </h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <a
-            href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
-            target="_blank"
-            class="hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
-          >
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center border-2">
-              <h4 class="font-bold text-lg">Plan A</h4>
-              <p class="text-3xl font-extrabold my-2">RM40</p>
-              <p class="text-gray-500">sebulan</p>
-            </div>
-          </a>
-          <a
-            href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
-            target="_blank"
-            class="hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
-          >
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center border-2">
-              <h4 class="font-bold text-lg">Plan B</h4>
-              <p class="text-3xl font-extrabold my-2">RM100</p>
-              <p class="text-gray-500">setiap suku tahun</p>
-            </div>
-          </a>
-          <a
-            href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
-            target="_blank"
-            class="hover:bg-grey-600 transition-transform transform hover:scale-105 inline-block"
-          >
+          <div class="grid md:grid-cols-3 gap-4 text-center">
             <div
-              class="bg-red-800 text-white p-6 rounded-lg shadow-lg text-center border-2 border-red-800 relative"
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 border-t-4 border-green-500"
+            >
+              <h4 class="font-bold text-slate-900">Situasi 1: Tuntutan Rendah</h4>
+              <p class="text-sm mt-2">
+                Bil Perubatan: RM30,000 <br />Ahli: 3,000
+              </p>
+              <p class="text-sm">
+                Jumlah perkongsian setiap ahli ialah: RM30,000 ÷ 3000 =
+              </p>
+              <p class="text-4xl font-extrabold my-4 text-green-600">RM10</p>
+              <p class="text-slate-700 text-justify [text-align-last:center]">Setiap ahli hanya ditolak RM10 daripada Sharing Account.</p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 border-t-4 border-blue-500"
+            >
+              <h4 class="font-bold text-slate-900">Situasi 2: Tiada Tuntutan</h4>
+              <p class="text-sm mt-2">Bil Perubatan: RM0 <br />Ahli: 3,000</p>
+              <p class="text-sm">
+                Jumlah perkongsian setiap ahli ialah: RM0 ÷ 3000 =
+              </p>
+              <p class="text-4xl font-extrabold my-4 text-blue-600">RM0</p>
+              <p class="text-slate-700 text-justify [text-align-last:center]">Tiada potongan daripada Sharing Account.</p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl ring-1 ring-slate-200 border-t-4 border-red-500"
+            >
+              <h4 class="font-bold text-slate-900">Situasi 3: Tuntutan Tinggi</h4>
+              <p class="text-sm mt-2">
+                Bil Perubatan: RM240,000 <br />Ahli: 3,000
+              </p>
+              <p class="text-sm">
+                Jumlah perkongsian setiap ahli ialah: RM240,000 ÷ 3000 =
+              </p>
+              <p class="text-4xl font-extrabold my-4 text-red-600">RM80</p>
+              <p class="text-slate-700 text-justify [text-align-last:center]">Potongan dihadkan RM50 sahaja. Baki bil dibawa ke bulan hadapan.</p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4 mt-6">
+            <a
+              href="https://www.wekongsi.com/reports"
+              target="_blank"
+              class="block transition-transform hover:scale-[1.02]"
+            >
+              <img
+                src="assets/3.jpg"
+                alt="Kes perkongsian 2023"
+                class="w-full rounded-xl shadow-lg ring-1 ring-slate-200"
+              />
+            </a>
+            <a
+              href="https://www.wekongsi.com/reports"
+              target="_blank"
+              class="block transition-transform hover:scale-[1.02]"
+            >
+              <img
+                src="assets/4.jpg"
+                alt="Kes perkongsian 2024"
+                class="w-full rounded-xl shadow-lg ring-1 ring-slate-200"
+              />
+            </a>
+          </div>
+
+          <!-- Yuran -->
+          <h3
+            class="mt-20 text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 text-center mb-8"
+          >
+            Pilihan Yuran Keahlian & Deposit
+          </h3>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <a
+              href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
+              target="_blank"
+              class="block bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center transition-transform hover:scale-[1.03] hover:shadow-lg"
+            >
+              <h4 class="font-bold text-slate-900">Plan A</h4>
+              <p class="text-4xl font-extrabold my-2 text-slate-900">RM40</p>
+              <p>sebulan</p>
+            </a>
+            <a
+              href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
+              target="_blank"
+              class="block bg-white p-6 rounded-2xl ring-1 ring-slate-200 text-center transition-transform hover:scale-[1.03] hover:shadow-lg"
+            >
+              <h4 class="font-bold text-slate-900">Plan B</h4>
+              <p class="text-4xl font-extrabold my-2 text-slate-900">RM100</p>
+              <p>setiap suku tahun</p>
+            </a>
+            <a
+              href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
+              target="_blank"
+              class="block relative overflow-hidden bg-blue-700 text-white p-6 rounded-2xl text-center shadow-lg transition-transform hover:scale-[1.03]"
             >
               <span
-                class="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-lg"
+                class="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-xl"
                 >PALING JIMAT</span
               >
-              <h4 class="font-bold text-lg">Plan C</h4>
-              <p class="text-3xl font-extrabold my-2">RM360</p>
-              <p class="text-gray-300">setahun</p>
-            </div>
-          </a>
-        </div>
-        <p
-          class="mt-4 bg-blue-100 p-4 rounded-lg text-blue-800 border-l-4 border-blue-500 mb-4"
-        >
-          <strong>Tips:</strong> Kalau nak jimat, saya cadangkan pilih C. Tapi
-          kalau belum ada bajet, pilih B pun ok.
-        </p>
-        <div class="bg-white p-8 rounded-lg shadow-inner mt-8">
-          <h3 class="text-xl font-bold text-gray-900 mb-4">
-            Maklumat Deposit & Top-up
-          </h3>
-          <div class="md:pr-8 py-5">
-            <p class="text-gray-700 mb-2">
-              Setiap ahli perlu membayar deposit permulaan:
-              <strong>RM100 (Standard)</strong> atau
-              <strong>RM200 (Deluxe)</strong>.
-            </p>
-            <p class="text-gray-700">
-              Bayaran perkongsian bulanan (maksimum RM50) akan ditolak daripada
-              deposit ini. Apabila baki mencapai had minimum, sistem akan
-              membuat auto-debit untuk top-up baki kembali ke jumlah asal.
-            </p>
+              <h4 class="font-bold">Plan C</h4>
+              <p class="text-4xl font-extrabold my-2">RM360</p>
+              <p class="text-blue-100">setahun</p>
+            </a>
           </div>
-          <div class="mt-4 md:mt-0">
-            <div class="h-65 w-full">
-              <img src=assets/10.png alt="tempohMenunggu" class="w-full hero-bg
-              mx-auto mb-4 border-4 border-black-500" />
+          <p class="mt-5 text-justify"><span class="font-bold text-blue-700 underline decoration-blue-500 decoration-2 underline-offset-4">Tips:</span> Nak jimat, pilih Plan C. Belum ada bajet? Plan B pun ok.</p>
+
+          <div
+            class="mt-8 bg-slate-50 ring-1 ring-slate-200 p-6 md:p-8 rounded-2xl grid md:grid-cols-2 gap-6 items-center"
+          >
+            <div>
+              <h4 class="text-xl font-bold text-slate-900 mb-3">
+                Maklumat Deposit & Top-up
+              </h4>
+              <p class="mb-2 text-justify">Deposit permulaan: <strong class="text-slate-900">RM100 (Standard)</strong> atau <strong class="text-slate-900">RM200 (Deluxe)</strong>.</p>
+              <p class="text-justify">Bayaran bulanan (maksimum RM50) ditolak daripada deposit ini. Apabila baki mencecah had minimum, sistem akan auto-debit untuk top-up semula ke jumlah asal.</p>
             </div>
+            <img
+              src="assets/10.png"
+              alt="Maklumat deposit dan top-up"
+              class="w-full rounded-xl ring-1 ring-slate-200"
+            />
+          </div>
+
+          <!-- Tempoh menunggu & kelayakan -->
+          <div class="mt-16 grid md:grid-cols-2 gap-8 items-start">
+            <div>
+              <h4 class="text-xl font-bold text-slate-900 mb-5">
+                Tempoh Menunggu
+              </h4>
+              <ol class="space-y-4">
+                <li class="flex gap-3">
+                  <span
+                    class="shrink-0 bg-blue-600 text-white rounded-full h-8 w-8 grid place-items-center font-bold"
+                    >1</span
+                  >
+                  <span
+                    ><strong class="text-slate-900">Hari 1-90:</strong> Cover
+                    rawatan akibat kemalangan & kematian.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <span
+                    class="shrink-0 bg-blue-600 text-white rounded-full h-8 w-8 grid place-items-center font-bold"
+                    >2</span
+                  >
+                  <span
+                    ><strong class="text-slate-900">Hari 91-180:</strong> Cover
+                    semua sakit biasa & kematian.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <span
+                    class="shrink-0 bg-blue-600 text-white rounded-full h-8 w-8 grid place-items-center font-bold"
+                    >3</span
+                  >
+                  <span
+                    ><strong class="text-slate-900">Selepas 180 Hari:</strong>
+                    Perlindungan penuh termasuk sakit kritikal.</span
+                  >
+                </li>
+              </ol>
+
+              <h4 class="text-xl font-bold text-slate-900 mt-10 mb-4">
+                Syarat Kelayakan
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-check-circle text-green-500"></i>Warganegara
+                  Malaysia
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-check-circle text-green-500"></i>Sihat
+                  fizikal dan mental
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-check-circle text-green-500"></i>Jujur
+                  tentang status kesihatan
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-check-circle text-green-500"></i>Umur 15 hari
+                  hingga 45 tahun
+                </li>
+              </ul>
+            </div>
+            <img
+              src="assets/9.jpg"
+              alt="Tempoh menunggu"
+              class="w-full rounded-xl shadow-lg ring-1 ring-slate-200"
+            />
           </div>
         </div>
       </section>
 
-      <!-- KELEBIHAN & KEKURANGAN -->
-      <section class="my-16">
-        <h2
-          class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8"
-        >
-          Kelebihan & Kekurangan (Kami Telus Dengan Anda)
-        </h2>
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-red-50 p-6 rounded-lg border border-red-200">
-            <h3 class="text-xl font-bold text-red-800 mb-4 text-center">
-              Perlu Dipertimbangkan (Kekurangan)
-            </h3>
-            <ul class="space-y-2">
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span
-                  >Tak cover kos konsultasi dan rawatan sebelum warded di
-                  hospital (pe hospitalisation), kecuali pakej Deluxe.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span
-                  >Tak cover kos konsultasi dan rawatan susulan selepas discaj
-                  daripada hospital (post hospitalisation)</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span
-                  >Hanya cover kos jika masuk wad sahaja (selepas dapat
-                  GL).</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span>Hanya cover rawatan dalam Malaysia.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span
-                  >Tidak cover implant, dialisis, atau pemindahan organ.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span>
-                  Secara asasnya perlu masuk wad 2-4 katil (bagi pakej
-                  Standard).</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span>Maksimum rawatan 120 hari sahaja setahun.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i
-                ><span>Tiada pelepasan cukai.</span>
-              </li>
-            </ul>
-          </div>
-          <div class="bg-green-50 p-6 rounded-lg border border-green-200">
-            <h3 class="text-xl font-bold text-green-800 mb-4 text-center">
-              Kelebihan Utama
-            </h3>
-            <ul class="space-y-2">
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Simple dan mudah – semuanya di hujung jari (Proses
-                  pendaftaran sepenuhnya secara online).</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Mendapat pengesahan patuh syariah.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Keahlian seumur hidup selagi aktif – bukan setakat umur 45
-                  sahaja.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Tidak perlu pay & claim – dilindungi sepenuhnya dengan
-                  GL.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Tiada risiko tuntutan tidak diluluskan.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Tempoh menunggu hanya 6 bulan untuk manfaat penuh (bukan 2
-                  tahun).</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Had tuntutan sehingga RM1 juta setiap tahun.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Khairat kematian sebanyak RM10,000.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Diterima di lebih 300 hospital panel kerajaan dan swasta di
-                  Malaysia.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Tiada caj co-takaful, co-payment atau deductible.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Boleh digunakan untuk cover kos medical plan lain
-                  (co-payment, deductible).</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Sumbangan bulanan yang amat mampu milik – tidak lebih
-                  RM50.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Tiada bayaran bulanan jika tiada tuntutan – bayar hanya bila
-                  perlu.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Bayaran bulanan dihadkan maksimum RM50 sahaja jika ada
-                  tuntutan.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Rawatan kanser dilindungi sehingga RM100,000 setahun.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span
-                  >Kemasukan hospital mudah – hanya guna aplikasi atau kad
-                  pengenalan.</span
-                >
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Telus – semua ahli boleh pantau status dan dana.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Kemaskini jumlah keahlian setiap hari.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Laporan dana perkongsian diterbitkan setiap bulan.</span>
-              </li>
-              <li class="flex">
-                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
-                <span>Boleh menaja keahlian dan jana pendapatan lumayan.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- CABARAN -->
+      <!-- ============ 6. PRO & KONTRA ============ -->
       <section
-        class="my-16 bg-gray-800 text-white p-8 md:p-12 rounded-xl shadow-2xl"
+        id="pro-kontra"
+        data-nav
+        data-label="Pro & Kontra"
+        class="py-16 md:py-24 px-5 md:px-20 bg-slate-50"
       >
-        <div class="text-center">
-          <i
-            class="fas fa-exclamation-triangle text-4xl text-yellow-400 mb-4"
-          ></i>
-          <h2 class="text-2xl md:text-3xl font-bold mb-4">
-            "Malang Tidak Berbau. Sudahkah Anda Bersedia?"
-          </h2>
-          <p class="text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            Kita tidak pernah mengharapkan kesusahan, namun tiada siapa tahu
-            bila musibah akan melanda. Jangan tunggu sehingga jatuh sakit baru
-            mencari perlindungan.
-          </p>
-        </div>
-        <div class="mt-8 bg-gray-700 p-6 rounded-lg">
-          <h4 class="font-bold text-lg text-center">
-            "Tapi hospital kerajaan kan ada?"
-          </h4>
-          <p class="text-center text-sm text-gray-400 mb-4">
-            Walaupun layak, pertimbangkan cabaran ini:
-          </p>
-          <ul class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Tempat letak kereta sesak</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Pesakit yang terlalu ramai</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Menunggu giliran yang lama</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Doktor pakar terhad</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Kos rawatan/alat tertentu mahal</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-minus-circle text-red-400 mr-2"></i
-              ><span>Sebahagian ubat perlu bayar sendiri</span>
-            </li>
-          </ul>
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >06 · Pro & Kontra</span
+            >
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
+              Kelebihan & Kekurangan
+            </h2>
+            <p class="mt-3">Kami telus dengan anda.</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="bg-white p-6 md:p-8 rounded-2xl ring-1 ring-green-200">
+              <h3
+                class="flex items-center gap-2 text-xl font-bold text-green-800 mb-5"
+              >
+                <i class="fas fa-thumbs-up"></i> Kelebihan Utama
+              </h3>
+              <ul class="space-y-3 text-[15px]">
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Simple dan mudah – semuanya di hujung jari (Proses
+                    pendaftaran sepenuhnya secara online).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Mendapat pengesahan patuh syariah.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Keahlian seumur hidup selagi aktif – bukan setakat umur 45
+                    sahaja.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Tidak perlu pay & claim – dilindungi sepenuhnya dengan
+                    GL.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Tiada risiko tuntutan tidak diluluskan.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Tempoh menunggu hanya 6 bulan untuk manfaat penuh (bukan 2
+                    tahun).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Had tuntutan sehingga RM1 juta setiap tahun.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Khairat kematian sebanyak RM10,000.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Diterima di lebih 300 hospital panel kerajaan dan swasta
+                    di Malaysia.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Tiada caj co-takaful, co-payment atau deductible.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Boleh digunakan untuk cover kos medical plan lain
+                    (co-payment, deductible).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Sumbangan bulanan yang amat mampu milik – tidak lebih
+                    RM50.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Tiada bayaran bulanan jika tiada tuntutan – bayar hanya
+                    bila perlu.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Bayaran bulanan dihadkan maksimum RM50 sahaja jika ada
+                    tuntutan.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Rawatan kanser dilindungi sehingga RM100,000 setahun.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span
+                    >Kemasukan hospital mudah – hanya guna aplikasi atau kad
+                    pengenalan.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Telus – semua ahli boleh pantau status dan dana.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Kemaskini jumlah keahlian setiap hari.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Laporan dana perkongsian diterbitkan setiap bulan.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-check-circle text-green-500 mt-1"></i
+                  ><span>Boleh menaja keahlian dan jana pendapatan lumayan.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-2xl ring-1 ring-red-200">
+              <h3
+                class="flex items-center gap-2 text-xl font-bold text-red-800 mb-5"
+              >
+                <i class="fas fa-balance-scale"></i> Perlu Dipertimbangkan
+              </h3>
+              <ul class="space-y-3 text-[15px]">
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span
+                    >Tak cover kos konsultasi dan rawatan sebelum warded di
+                    hospital (pre hospitalisation), kecuali pakej Deluxe.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span
+                    >Tak cover kos konsultasi dan rawatan susulan selepas discaj
+                    daripada hospital (post hospitalisation).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span
+                    >Hanya cover kos jika masuk wad sahaja (selepas dapat
+                    GL).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span>Hanya cover rawatan dalam Malaysia.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span
+                    >Tidak cover implant, dialisis, atau pemindahan organ.</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span
+                    >Secara asasnya perlu masuk wad 2-4 katil (bagi pakej
+                    Standard).</span
+                  >
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span>Maksimum rawatan 120 hari sahaja setahun.</span>
+                </li>
+                <li class="flex gap-3">
+                  <i class="fas fa-times-circle text-red-500 mt-1"></i
+                  ><span>Tiada pelepasan cukai.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- VIDEO & FAQ -->
-      <section class="my-16">
-        <div class="max-w-screen-xl mx-auto px-4 grid md:grid-cols-2 gap-8">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Video Penerangan
-            </h2>
-            <div
-              class="rounded-lg shadow-lg overflow-hidden h-[250px] md:h-[300px]"
+      <!-- ============ 7. SOALAN LAZIM ============ -->
+      <section
+        id="soalan"
+        data-nav
+        data-label="Soalan Lazim"
+        class="py-16 md:py-24 px-5 md:px-20 bg-white"
+      >
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-10">
+            <span
+              class="text-xs font-bold tracking-[0.2em] uppercase text-blue-600"
+              >07 · Soalan Lazim</span
             >
-              <iframe
-                src="https://www.youtube.com/embed/zUKqv-P38gc"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                class="w-full h-full"
-              ></iframe>
-            </div>
-          </div>
-
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            <h2
+              class="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900"
+            >
               Soalan Lazim (FAQ)
             </h2>
-            <div class="space-y-4">
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
-                >
-                  <span class="font-semibold text-gray-800"
-                    >Apakah syarat kelayakan menyertai WeKongsi?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <ul class="list-disc pl-5 space-y-1">
-                      <li>Warganegara Malaysia.</li>
-                      <li>Berumur 14 hari hingga 45 tahun.</li>
-                      <li>Sihat daripada sebarang penyakit.</li>
-                      <li>Bersetuju dengan terma & syarat program.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          </div>
 
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
+          <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div class="space-y-3">
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
                 >
-                  <span class="font-semibold text-gray-800"
-                    >Apa beza pakej Standard dan Deluxe?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <p>
-                      Beza pada jumlah Sharing Account dan manfaat. Pakej
-                      Standard memerlukan deposit RM100, manakala Pakej Deluxe
-                      ialah RM200.
-                    </p>
-                    <p class="mt-2">
-                      Pakej Deluxe mempunyai manfaat tambahan seperti bilik
-                      RM250/hari, diagnosis pra-hospital, dan kos ambulan penuh.
-                      Tujuan utamanya adalah untuk memanjangkan tempoh sebelum
-                      top-up diperlukan.
-                    </p>
-                  </div>
+                  Apakah syarat kelayakan menyertai WeKongsi?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li>Warganegara Malaysia.</li>
+                    <li>Berumur 14 hari hingga 45 tahun.</li>
+                    <li>Sihat daripada sebarang penyakit.</li>
+                    <li>Bersetuju dengan terma & syarat program.</li>
+                  </ul>
                 </div>
-              </div>
+              </details>
 
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
                 >
-                  <span class="font-semibold text-gray-800"
-                    >Berapa lamakah tempoh menunggu?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <ul class="list-disc pl-5 space-y-1">
-                      <li>
-                        <strong>0-90 hari:</strong> Tuntutan kos rawatan
-                        kemalangan (sehingga RM10,000).
-                      </li>
-                      <li>
-                        <strong>91-180 hari:</strong> Tuntutan untuk sakit biasa
-                        (demam, denggi, etc).
-                      </li>
-                      <li>
-                        <strong>Selepas 181 hari:</strong> Tuntutan untuk
-                        penyakit kritikal (sakit jantung, kanser, etc).
-                      </li>
-                    </ul>
-                  </div>
+                  Apa beza pakej Standard dan Deluxe?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4 space-y-2">
+                  <p class="text-justify">Bezanya pada jumlah Sharing Account dan manfaat. Deposit Standard RM100, manakala Deluxe RM200.</p>
+                  <p class="text-justify">Deluxe ada manfaat tambahan: bilik RM250/hari, diagnosis pra-hospital dan kos ambulans penuh. Ia juga memanjangkan tempoh sebelum perlu top-up.</p>
                 </div>
-              </div>
+              </details>
 
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
                 >
-                  <span class="font-semibold text-gray-800"
-                    >Jika saya sudah ada penyakit, adakah masih layak?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <p>
-                      Anda hendaklah mengisytiharkan sebarang penyakit sedia ada
-                      semasa saringan kesihatan. Peserta berstatus 'Probation'
-                      perlu memuat naik dokumen perubatan melalui portal ahli
-                      untuk dinilai.
-                    </p>
-                  </div>
+                  Berapa lamakah tempoh menunggu?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li>
+                      <strong>0-90 hari:</strong> Tuntutan kos rawatan
+                      kemalangan (sehingga RM10,000).
+                    </li>
+                    <li>
+                      <strong>91-180 hari:</strong> Tuntutan untuk sakit biasa
+                      (demam, denggi, etc).
+                    </li>
+                    <li>
+                      <strong>Selepas 181 hari:</strong> Tuntutan untuk penyakit
+                      kritikal (sakit jantung, kanser, etc).
+                    </li>
+                  </ul>
                 </div>
-              </div>
+              </details>
 
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
                 >
-                  <span class="font-semibold text-gray-800"
-                    >Adakah boleh guna untuk rawatan di klinik?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <p>
-                      Ya, kemaskini terkini membenarkan penggunaan di lebih
-                      4,000 klinik panel untuk 17 jenis sakit biasa. Anda boleh
-                      merujuk senarai penyakit dan klinik panel dalam Program
-                      Guidelines.
-                    </p>
-                  </div>
+                  Jika saya sudah ada penyakit, adakah masih layak?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4">
+                  <p class="text-justify">Isytiharkan sebarang penyakit sedia ada semasa saringan kesihatan. Peserta berstatus 'Probation' perlu memuat naik dokumen perubatan di portal ahli untuk dinilai.</p>
                 </div>
-              </div>
+              </details>
 
-              <div class="faq-item bg-white rounded-lg shadow-md">
-                <button
-                  class="faq-toggle w-full text-left p-4 flex justify-between items-center"
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
                 >
-                  <span class="font-semibold text-gray-800"
-                    >Bagaimana untuk saya dapatkan Program Guidelines?</span
-                  >
-                  <i class="fas fa-plus transition-transform"></i>
-                </button>
-                <div
-                  class="faq-answer max-h-0 overflow-hidden transition-all duration-500"
-                >
-                  <div class="p-4 border-t text-gray-700">
-                    <p>
-                      Anda boleh memuat turun Program Guidelines WeKongsi
-                      <a
-                        href="https://www.wekongsi.com/pdf/program_feb_2025.pdf"
-                        class="text-red-600 font-bold hover:underline"
-                        >di sini</a
-                      >.
-                    </p>
-                  </div>
+                  Adakah boleh guna untuk rawatan di klinik?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4">
+                  <p class="text-justify">Ya. Kini boleh digunakan di lebih 4,000 klinik panel untuk 17 jenis sakit biasa. Senarai penyakit dan klinik ada dalam Program Guidelines.</p>
                 </div>
+              </details>
+
+              <details
+                class="group bg-slate-50 rounded-2xl ring-1 ring-slate-200 open:bg-white open:shadow-md"
+              >
+                <summary
+                  class="cursor-pointer list-none p-4 flex justify-between items-center gap-4 font-semibold text-slate-900"
+                >
+                  Bagaimana untuk saya dapatkan Program Guidelines?
+                  <i
+                    class="fas fa-plus text-blue-600 transition-transform group-open:rotate-45"
+                  ></i>
+                </summary>
+                <div class="px-4 pb-4">
+                  <p class="text-justify">Muat turun Program Guidelines WeKongsi <a href="https://www.wekongsi.com/pdf/program_feb_2025.pdf" target="_blank" class="text-blue-600 font-bold hover:underline">di sini</a>.</p>
+                </div>
+              </details>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-4">
+                Video Penerangan
+              </h3>
+              <div
+                class="rounded-2xl shadow-lg overflow-hidden aspect-video ring-1 ring-slate-200"
+              >
+                <iframe
+                  src="https://www.youtube.com/embed/zUKqv-P38gc"
+                  title="Video penerangan WeKongsi"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  class="w-full h-full"
+                ></iframe>
               </div>
             </div>
           </div>
@@ -953,77 +1343,177 @@
       </section>
     </main>
 
+    <!-- ============ FOOTER (glass) ============ -->
     <footer
       id="daftar"
-      class="sticky bottom-0 z-60 bg-white/80 backdrop-blur-sm border-t border-gray-200 shadow-t-md py-2 px-5 z-50"
+      class="fixed inset-x-0 mx-auto w-fit max-w-[calc(100%-1.5rem)] z-50"
+      style="bottom: calc(env(safe-area-inset-bottom, 0px) + 12px)"
     >
       <div
-        class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3"
+        class="flex items-center gap-2 sm:gap-3 rounded-xl bg-slate-900/65 backdrop-blur-lg backdrop-saturate-150 border border-white/15 shadow-lg shadow-slate-900/20 p-1.5 pl-3.5"
       >
-        <!-- Text -->
         <p
-          class="text-center sm:text-left font-semibold text-gray-900 text-sm sm:text-base"
+          class="font-semibold text-white/90 text-xs sm:text-sm whitespace-nowrap pr-2 sm:pr-3 border-r border-white/20"
         >
-          Sedia Untuk Mendapatkan Perlindungan Terbaik?
+          Perlindungan terbaik?
         </p>
-
-        <!-- Buttons -->
-        <div class="flex flex-row flex-wrap gap-2 justify-center">
-          <a
-            href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
-            target="_blank"
-            class="bg-red-600 text-white font-semibold text-sm sm:text-base py-2 px-4 rounded-md shadow hover:bg-red-700 transition-transform transform hover:scale-105"
-          >
-            <i class="fas fa-user-plus mr-2"></i>Daftar Sekarang
-          </a>
-          <a
-            href="https://www.wasap.my/60133200157/Info+WK"
-            target="_blank"
-            class="bg-green-500 text-white font-semibold text-sm sm:text-base py-2 px-4 rounded-md shadow hover:bg-green-600 transition-transform transform hover:scale-105"
-          >
-            <i class="fab fa-whatsapp mr-2"></i>Info Whatsapp
-          </a>
-        </div>
+        <a
+          href="https://app.wekongsi.com/auth/register/usr_20240217_aq6i8k/referral"
+          target="_blank"
+          class="inline-flex items-center gap-1.5 bg-red-600 text-white font-semibold text-xs sm:text-sm h-8 px-3 rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap"
+        >
+          <i class="fas fa-user-plus"></i>Daftar
+        </a>
+        <a
+          href="https://www.wasap.my/60133200157/Info+WK"
+          target="_blank"
+          aria-label="WhatsApp"
+          class="inline-flex items-center justify-center gap-1.5 bg-green-500 text-white font-semibold text-xs sm:text-sm h-8 min-w-[2rem] sm:px-3 rounded-lg hover:bg-green-600 transition-colors"
+        >
+          <i class="fab fa-whatsapp text-sm"></i
+          ><span class="hidden sm:inline">WhatsApp</span>
+        </a>
       </div>
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const faqToggles = document.querySelectorAll(".faq-toggle");
+      (function () {
+        const sections = [...document.querySelectorAll("[data-nav]")];
+        const list = document.getElementById("thermo-ticks");
+        const fill = document.getElementById("thermo-fill");
+        const n = sections.length;
 
-        faqToggles.forEach((toggle) => {
-          toggle.addEventListener("click", () => {
-            const faqItem = toggle.parentElement;
-            const answer = faqItem.querySelector(".faq-answer");
-            const icon = toggle.querySelector("i");
-
-            // Close all other open FAQ items
-            document.querySelectorAll(".faq-item").forEach((item) => {
-              if (item !== faqItem) {
-                const otherAnswer = item.querySelector(".faq-answer");
-                const otherIcon = item.querySelector(".faq-toggle i");
-                otherAnswer.style.maxHeight = null;
-                otherIcon.classList.remove("rotate-45");
-                otherIcon.classList.add("fa-plus");
-                otherIcon.classList.remove("fa-minus");
-              }
-            });
-
-            // Toggle the clicked FAQ item
-            if (answer.style.maxHeight) {
-              answer.style.maxHeight = null;
-              icon.classList.remove("rotate-45");
-              icon.classList.add("fa-plus");
-              icon.classList.remove("fa-minus");
-            } else {
-              answer.style.maxHeight = answer.scrollHeight + "px";
-              icon.classList.add("rotate-45");
-              icon.classList.remove("fa-plus");
-              icon.classList.add("fa-minus");
-            }
-          });
+        // Build ticks: first section sits at the bulb, last at the top
+        const ticks = sections.map((sec, i) => {
+          const label = sec.dataset.label || "Utama";
+          const li = document.createElement("li");
+          li.className = "absolute left-1/2";
+          li.style.bottom = (i / (n - 1)) * 100 + "%";
+          li.style.transform = "translate(-50%, 50%)";
+          li.innerHTML =
+            '<button type="button" class="tick relative grid place-items-center w-7 h-7" aria-label="' +
+            label +
+            '"><span class="tick-dot"></span>' +
+            '<span class="tick-label absolute right-full top-1/2 mr-3 whitespace-nowrap text-xs font-semibold text-slate-700 bg-white/95 px-2 py-0.5 rounded-sm border-r-[3px] border-slate-300 shadow-sm">' +
+            label +
+            "</span></button>";
+          const btn = li.firstChild;
+          btn.addEventListener("click", () =>
+            sec.scrollIntoView({ behavior: "smooth" })
+          );
+          list.appendChild(li);
+          return btn;
         });
-      });
+
+        // Phones have no hover: first tap shows all labels, next tap jumps
+        const thermo = document.getElementById("thermo");
+        const noHover = window.matchMedia("(hover: none)").matches;
+        let openTimer;
+        function closeNav() {
+          thermo.classList.remove("open");
+        }
+        if (noHover) {
+          thermo.addEventListener(
+            "click",
+            (e) => {
+              if (!thermo.classList.contains("open")) {
+                e.stopPropagation();
+                thermo.classList.add("open");
+              }
+              clearTimeout(openTimer);
+              openTimer = setTimeout(closeNav, 3500);
+            },
+            true
+          );
+          document.addEventListener("click", (e) => {
+            if (!thermo.contains(e.target)) closeNav();
+          });
+        }
+
+        // Mobile top nav: one pill per section + horizontal mercury bar
+        const pillBar = document.getElementById("topnav-pills");
+        const topFill = document.getElementById("topnav-fill");
+        const pills = sections.map((sec) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.textContent = sec.dataset.label || "Utama";
+          b.className =
+            "navtab shrink-0 whitespace-nowrap text-xs font-semibold px-2.5 py-3";
+          b.addEventListener("click", () =>
+            sec.scrollIntoView({ behavior: "smooth" })
+          );
+          pillBar.appendChild(b);
+          return b;
+        });
+        function syncPills(i) {
+          pills.forEach((b, k) => {
+            const on = k === i;
+            b.classList.toggle("on", on);
+          });
+          const a = pills[i];
+          pillBar.scrollTo({
+            left: a.offsetLeft - pillBar.clientWidth / 2 + a.offsetWidth / 2,
+            behavior: "smooth",
+          });
+        }
+
+        let current = -1;
+        let flashTimer;
+
+        function update() {
+          const y = window.scrollY + window.innerHeight * 0.35;
+          let i = 0;
+          sections.forEach((s, k) => {
+            if (s.offsetTop <= y) i = k;
+          });
+          let p;
+          const atBottom =
+            window.innerHeight + window.scrollY >=
+            document.documentElement.scrollHeight - 4;
+          if (atBottom || i === n - 1) {
+            i = atBottom ? n - 1 : i;
+            p = 1;
+          } else {
+            const a = sections[i].offsetTop;
+            const b = sections[i + 1].offsetTop;
+            const frac = Math.min(Math.max((y - a) / (b - a), 0), 1);
+            p = (i + frac) / (n - 1);
+          }
+          fill.style.height = "calc(12px + " + p + " * (100% - 24px))";
+          topFill.style.width = p * 100 + "%";
+
+          ticks.forEach((t, k) => {
+            t.classList.toggle("is-active", k === i);
+            t.classList.toggle("is-passed", k <= i);
+          });
+
+          // Briefly show the label when the section changes
+          if (i !== current) {
+            current = i;
+            syncPills(i);
+            const t = ticks[i];
+            ticks.forEach((x) => x.classList.remove("flash"));
+            t.classList.add("flash");
+            clearTimeout(flashTimer);
+            flashTimer = setTimeout(() => t.classList.remove("flash"), 1500);
+          }
+        }
+
+        let ticking = false;
+        function onScroll() {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+          }
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        window.addEventListener("load", update);
+        update();
+      })();
     </script>
   </body>
 </html>
